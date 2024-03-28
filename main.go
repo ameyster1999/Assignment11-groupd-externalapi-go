@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/go-resty/resty/v2"
 	"log"
 	"net/http"
 )
@@ -18,34 +17,7 @@ type CityRequest struct {
 	Name string `json:"name"`
 }
 
-func getWeather(city string) (*WeatherResponse, error) {
-	apiKey := "d51319b8aafa1e0618c55136562d617b"
-	url := fmt.Sprintf("https://api.openweathermap.org/data/2.5/weather?q=%s&appid=%s&units=metric", city, apiKey)
-
-	client := resty.New()
-	resp, err := client.R().Get(url)
-	if err != nil {
-		return nil, err
-	}
-
-	if resp.StatusCode() != http.StatusOK {
-		return nil, fmt.Errorf("failed to fetch weather data: %s", resp.Status())
-	}
-
-	var weatherData map[string]interface{}
-	err = json.Unmarshal(resp.Body(), &weatherData)
-	if err != nil {
-		return nil, err
-	}
-
-	weather := WeatherResponse{
-		City:        weatherData["name"].(string),
-		Temperature: fmt.Sprintf("%.1f°C", weatherData["main"].(map[string]interface{})["temp"].(float64)),
-		Weather:     weatherData["weather"].([]interface{})[0].(map[string]interface{})["main"].(string),
-	}
-
-	return &weather, nil
-}
+//need to add get code here will be done by hassans son
 
 func handleCity(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
